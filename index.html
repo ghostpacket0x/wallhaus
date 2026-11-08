@@ -9,7 +9,8 @@
   * { box-sizing: border-box; }
   html, body { margin:0; background:var(--bg); color:var(--fg);
     font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
-  canvas#net { position:fixed; inset:0; z-index:0; pointer-events:none; }
+  html, body { overflow-x:hidden; max-width:100%; }
+  canvas#net { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
   header, main, footer { position:relative; z-index:1; }
   nav { display:flex; justify-content:space-between; align-items:center; padding:24px 56px; }
   .logo { font-weight:900; font-size:22px; letter-spacing:-.02em; transform:scaleX(1.25); transform-origin:left; }
