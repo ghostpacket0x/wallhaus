@@ -73,3 +73,38 @@
 
 /* Glowing ink trail canvas, sits behind the content */
 #ink { position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:0; }
+
+/* ---- Added: nav links, hero buttons, preview arrows, shimmer, doc pages ---- */
+a.logo { color:var(--fg); text-decoration:none; }
+.navlinks { display:flex; gap:24px; }
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.btn.ghost { background:transparent; color:var(--fg); border:1px solid var(--line); }
+.btn.ghost:hover { border-color:#3a4150; }
+footer a { color:var(--muted); }
+footer a:hover { color:var(--fg); }
+
+.thumb { position:relative; overflow:hidden; }
+.thumb.shimmer::after { content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.07), transparent);
+  animation:sweep 1.4s ease-in-out infinite; }
+@keyframes sweep { from { transform:translateX(-100%); } to { transform:translateX(100%); } }
+
+.nav-btn { position:fixed; top:50%; transform:translateY(-50%); z-index:11;
+  width:48px; height:48px; border-radius:50%; cursor:pointer; font-size:28px; line-height:1;
+  background:rgba(15,17,20,.6); color:var(--fg); border:1px solid var(--line); backdrop-filter:blur(6px); }
+.nav-btn.prev { left:16px; }
+.nav-btn.next { right:16px; }
+
+.doc { max-width:720px; margin:0 auto; padding:60px 24px 80px; line-height:1.7; }
+.doc h1 { font-weight:900; font-size:clamp(36px,6vw,52px); letter-spacing:-.02em; margin:0 0 24px; }
+.doc h2 { font-size:20px; margin:36px 0 8px; }
+.doc p { color:#c3c8d2; margin:0 0 12px; }
+.doc a { color:var(--fg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb.shimmer::after { animation:none; display:none; }
+}
+@media (max-width:640px) {
+  .navlinks { gap:16px; }
+  .nav-btn { width:40px; height:40px; font-size:24px; }
+}

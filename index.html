@@ -6,20 +6,31 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>wallhaus · Wallpapers</title>
+<meta name="description" content="Wallpapers for your phone and desktop. Pick a style, preview it full screen, and set it as your background.">
+<meta property="og:title" content="wallhaus · Wallpapers">
+<meta property="og:description" content="Wallpapers for your phone and desktop. Preview full screen and set as your background.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ghostpacket0x.github.io/wallhaus/">
+<meta property="og:image" content="https://ghostpacket0x.github.io/wallhaus/wallpapers/thumbs/00.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-<canvas id="net"></canvas>
 <header>
   <nav>
     <div class="logo">wallhaus</div>
-    <a href="#gallery">Wallpapers</a>
+    <div class="navlinks">
+      <a href="#gallery">Wallpapers</a>
+      <a href="about.html">About</a>
+    </div>
   </nav>
   <section class="hero">
     <h1>wallhaus</h1>
     <p>Wallpapers for your phone and desktop. Pick a style, preview it full screen, and set it as your background.</p>
-    <a class="btn" href="#gallery">Browse wallpapers</a>
+    <div class="hero-actions">
+      <a class="btn" href="#gallery">Browse wallpapers</a>
+      <button class="btn ghost" id="random">Random wallpaper</button>
+    </div>
   </section>
 </header>
 <main id="gallery">
@@ -36,9 +47,11 @@
     <button id="close">← Back</button>
     <a class="btn" id="download" href="#" download>Download</a>
   </div>
+  <button class="nav-btn prev" id="prev" aria-label="Previous wallpaper">‹</button>
+  <button class="nav-btn next" id="next" aria-label="Next wallpaper">›</button>
   <div class="caption" id="caption"></div>
 </div>
-<footer>© 2026 wallhaus</footer>
+<footer>© 2026 wallhaus · <a href="about.html">About</a> · <a href="privacy.html">Privacy</a></footer>
 <script src="script.js"></script>
 </body>
 </html>
