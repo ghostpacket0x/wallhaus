@@ -105,7 +105,7 @@ if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
     d.className = "trail";
     d.style.left = e.clientX + "px";
     d.style.top = e.clientY + "px";
-    d.style.background = `hsl(${hue} 90% 60%)`;
+    d.style.setProperty("--c", `hsl(${hue} 95% 60%)`);
     document.body.appendChild(d);
     d.addEventListener("animationend", () => d.remove());
   });
