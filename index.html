@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>wallhaus · Wallpapers</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<canvas id="net"></canvas>
+<header>
+  <nav>
+    <div class="logo">wallhaus</div>
+    <a href="#gallery">Wallpapers</a>
+  </nav>
+  <section class="hero">
+    <h1>wallhaus</h1>
+    <p>Wallpapers for your phone and desktop. Pick a style, preview it full screen, and set it as your background.</p>
+    <a class="btn" href="#gallery">Browse wallpapers</a>
+  </section>
+</header>
+<main id="gallery">
+  <div class="filters" id="filters">
+    <button class="chip on" data-f="all">All</button>
+    <button class="chip" data-f="4k">4K</button>
+    <button class="chip" data-f="desktop">Laptop &amp; Desktop</button>
+    <button class="chip" data-f="phone">Phone</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+<div id="viewer">
+  <div class="bar">
+    <button id="close">← Back</button>
+    <a class="btn" id="download" href="#" download>Download</a>
+  </div>
+  <div class="caption" id="caption"></div>
+</div>
+<footer>© 2026 wallhaus</footer>
+<script src="script.js"></script>
+</body>
+</html>
