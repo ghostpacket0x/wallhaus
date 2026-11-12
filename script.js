@@ -93,20 +93,71 @@ addEventListener("resize", resizeNet);
 resizeNet();
 tickNet(); // draws once; keeps animating unless reduced motion is on
 
-// Colorful trail that follows the mouse (skipped if reduced motion is on)
+// Glowing ink-like trail that swirls behind the mouse (skipped if reduced motion is on)
 if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  let lastTrail = 0, hue = 0;
+  const ink = document.createElement("canvas");
+  ink.id = "ink";
+  document.body.appendChild(ink);
+  const g = ink.getContext("2d");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function sizeInk() {
+    ink.width = innerWidth * dpr;
+    ink.height = innerHeight * dpr;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  sizeInk();
+  addEventListener("resize", sizeInk);
+
+  const HUES = [300, 320, 190, 205, 120, 140]; // pink, blue, green
+  const parts = [];
+  let lastX = null, lastY = null;
   addEventListener("pointermove", e => {
-    const now = performance.now();
-    if (now - lastTrail < 45) return; // limit how many blobs are created
-    lastTrail = now;
-    hue = (hue + 9) % 360;
-    const d = document.createElement("div");
-    d.className = "trail";
-    d.style.left = e.clientX + "px";
-    d.style.top = e.clientY + "px";
-    d.style.setProperty("--c", `hsl(${hue} 95% 60%)`);
-    document.body.appendChild(d);
-    d.addEventListener("animationend", () => d.remove());
+    const dx = lastX === null ? 0 : e.clientX - lastX;
+    const dy = lastY === null ? 0 : e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    for (let i = 0; i < 4; i++) {
+      parts.push({
+        x: e.clientX + (Math.random() - .5) * 10,
+        y: e.clientY + (Math.random() - .5) * 10,
+        vx: dx * .15 + (Math.random() - .5) * 1.2,
+        vy: dy * .15 + (Math.random() - .5) * 1.2,
+        r: 14 + Math.random() * 16,
+        life: 1,
+        hue: HUES[Math.floor(Math.random() * HUES.length)] + (Math.random() - .5) * 20,
+      });
+    }
+    if (parts.length > 400) parts.splice(0, parts.length - 400);
   });
+
+  let t = 0;
+  function frame() {
+    t += 0.016;
+    // Fade the old frame slightly so streaks linger and dissolve
+    g.globalCompositeOperation = "destination-out";
+    g.fillStyle = "rgba(0,0,0,0.08)";
+    g.fillRect(0, 0, innerWidth, innerHeight);
+    g.globalCompositeOperation = "lighter";
+
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i];
+      // Swirling current, so streaks curl like ink in water
+      p.vx += Math.sin(p.y * 0.01 + t) * 0.03;
+      p.vy += Math.cos(p.x * 0.01 + t) * 0.03;
+      p.vx *= 0.94; p.vy *= 0.94;
+      p.x += p.vx; p.y += p.vy;
+      p.life -= 0.012;
+      if (p.life <= 0) { parts.splice(i, 1); continue; }
+
+      const r = p.r * (1.6 - p.life * 0.6);
+      const grd = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+      grd.addColorStop(0, `hsla(${p.hue},100%,62%,${p.life * 0.55})`);
+      grd.addColorStop(1, `hsla(${p.hue},100%,50%,0)`);
+      g.fillStyle = grd;
+      g.beginPath();
+      g.arc(p.x, p.y, r, 0, Math.PI * 2);
+      g.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
 }
