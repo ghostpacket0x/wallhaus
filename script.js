@@ -92,3 +92,21 @@ function tickNet() {
 addEventListener("resize", resizeNet);
 resizeNet();
 tickNet(); // draws once; keeps animating unless reduced motion is on
+
+// Colorful trail that follows the mouse (skipped if reduced motion is on)
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let lastTrail = 0, hue = 0;
+  addEventListener("pointermove", e => {
+    const now = performance.now();
+    if (now - lastTrail < 45) return; // limit how many blobs are created
+    lastTrail = now;
+    hue = (hue + 9) % 360;
+    const d = document.createElement("div");
+    d.className = "trail";
+    d.style.left = e.clientX + "px";
+    d.style.top = e.clientY + "px";
+    d.style.background = `hsl(${hue} 90% 60%)`;
+    document.body.appendChild(d);
+    d.addEventListener("animationend", () => d.remove());
+  });
+}
