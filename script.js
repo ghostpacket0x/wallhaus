@@ -1,5 +1,5 @@
 // wallhaus script: gallery, filters, preview with arrows and swipe, random pick,
-// loading shimmer, card reveal, and a glowing ink trail behind the mouse
+// loading shimmer, and card reveal
   const WALLPAPERS = [{"name": "Ember Gaze", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/00.jpg", "full": "wallpapers/00.jpg"}, {"name": "Blue Night City", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/01.jpg", "full": "wallpapers/01.jpg"}, {"name": "Bandaged Stare", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/02.jpg", "full": "wallpapers/02.jpg"}, {"name": "Knight in Blossoms", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/03.jpg", "full": "wallpapers/03.jpg"}, {"name": "Black Rose Knight", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/04.jpg", "full": "wallpapers/04.jpg"}, {"name": "Whatever Doesn't Kill Us", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/05.jpg", "full": "wallpapers/05.jpg"}, {"name": "Monster Ultra", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/06.jpg", "full": "wallpapers/06.jpg"}, {"name": "Berserk Blade", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/07.jpg", "full": "wallpapers/07.jpg"}, {"name": "Silver Hour", "cats": ["4k", "desktop"], "res": "4K \u00b7 Desktop", "thumb": "wallpapers/thumbs/08.jpg", "full": "wallpapers/08.jpg"}, {"name": "Gojo Glasses", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/09.jpg", "full": "wallpapers/09.jpg"}, {"name": "Crystal Eyes", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/10.jpg", "full": "wallpapers/10.jpg"}, {"name": "Lone Tree", "cats": ["4k", "desktop"], "res": "4K \u00b7 Desktop", "thumb": "wallpapers/thumbs/11.jpg", "full": "wallpapers/11.jpg"}, {"name": "Ghost", "cats": ["4k", "desktop"], "res": "4K \u00b7 Desktop", "thumb": "wallpapers/thumbs/12.jpg", "full": "wallpapers/12.jpg"}, {"name": "Spider Web", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/13.jpg", "full": "wallpapers/13.jpg"}, {"name": "Orange Scarf", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/14.jpg", "full": "wallpapers/14.jpg"}, {"name": "Ice Veil", "cats": ["desktop"], "res": "Desktop", "thumb": "wallpapers/thumbs/15.jpg", "full": "wallpapers/15.jpg"}, {"name": "Asta Shadow", "cats": ["phone"], "res": "Phone", "thumb": "wallpapers/thumbs/16.jpg", "full": "wallpapers/16.jpg"}, {"name": "Fourth Flame", "cats": ["phone"], "res": "Phone", "thumb": "wallpapers/thumbs/17.jpg", "full": "wallpapers/17.jpg"}, {"name": "Manga Panels", "cats": ["phone"], "res": "Phone", "thumb": "wallpapers/thumbs/18.jpg", "full": "wallpapers/18.jpg"}, {"name": "Berserk Eyes", "cats": ["phone"], "res": "Phone", "thumb": "wallpapers/thumbs/19.jpg", "full": "wallpapers/19.jpg"}, {"name": "Ronin Silhouette", "cats": ["phone"], "res": "Phone", "thumb": "wallpapers/thumbs/20.jpg", "full": "wallpapers/20.jpg"}, {"name": "Steel Chain", "cats": ["phone"], "res": "Phone", "thumb": "wallpapers/thumbs/21.jpg", "full": "wallpapers/21.jpg"}, {"name": "Monochrome Bill", "cats": ["phone"], "res": "Phone", "thumb": "wallpapers/thumbs/22.jpg", "full": "wallpapers/22.jpg"}];
 
 const grid = document.getElementById("grid");
@@ -84,71 +84,6 @@ document.getElementById("filters").addEventListener("click", e => {
     card.classList.toggle("hidden", !show);
   });
 });
-
-// Glowing ink-like trail that swirls behind the mouse (skipped if reduced motion is on)
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  const ink = document.createElement("canvas");
-  ink.id = "ink";
-  document.body.appendChild(ink);
-  const g = ink.getContext("2d");
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  function sizeInk() {
-    ink.width = innerWidth * dpr;
-    ink.height = innerHeight * dpr;
-    g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  sizeInk();
-  addEventListener("resize", sizeInk);
-
-  const HUES = [300, 320, 190, 205, 120, 140]; // pink, blue, green
-  const parts = [];
-  let lastX = null, lastY = null;
-  addEventListener("pointermove", e => {
-    const dx = lastX === null ? 0 : e.clientX - lastX;
-    const dy = lastY === null ? 0 : e.clientY - lastY;
-    lastX = e.clientX; lastY = e.clientY;
-    for (let i = 0; i < 4; i++) {
-      parts.push({
-        x: e.clientX + (Math.random() - .5) * 10,
-        y: e.clientY + (Math.random() - .5) * 10,
-        vx: dx * .15 + (Math.random() - .5) * 1.2,
-        vy: dy * .15 + (Math.random() - .5) * 1.2,
-        r: 14 + Math.random() * 16,
-        life: 1,
-        hue: HUES[Math.floor(Math.random() * HUES.length)] + (Math.random() - .5) * 20,
-      });
-    }
-    if (parts.length > 400) parts.splice(0, parts.length - 400);
-  });
-
-  let t = 0;
-  function frame() {
-    t += 0.016;
-    g.globalCompositeOperation = "destination-out";
-    g.fillStyle = "rgba(0,0,0,0.08)";
-    g.fillRect(0, 0, innerWidth, innerHeight);
-    g.globalCompositeOperation = "lighter";
-    for (let i = parts.length - 1; i >= 0; i--) {
-      const p = parts[i];
-      p.vx += Math.sin(p.y * 0.01 + t) * 0.03;
-      p.vy += Math.cos(p.x * 0.01 + t) * 0.03;
-      p.vx *= 0.94; p.vy *= 0.94;
-      p.x += p.vx; p.y += p.vy;
-      p.life -= 0.012;
-      if (p.life <= 0) { parts.splice(i, 1); continue; }
-      const r = p.r * (1.6 - p.life * 0.6);
-      const grd = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-      grd.addColorStop(0, `hsla(${p.hue},100%,62%,${p.life * 0.55})`);
-      grd.addColorStop(1, `hsla(${p.hue},100%,50%,0)`);
-      g.fillStyle = grd;
-      g.beginPath();
-      g.arc(p.x, p.y, r, 0, Math.PI * 2);
-      g.fill();
-    }
-    requestAnimationFrame(frame);
-  }
-  frame();
-}
 
 render();
 

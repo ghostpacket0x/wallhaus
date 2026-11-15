@@ -4,24 +4,6 @@
   html, body { margin:0; background:var(--bg); color:var(--fg);
     font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
   html, body { overflow-x:hidden; max-width:100%; }
-  #aurora { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-  #aurora .blob { position:absolute; width:55vmax; height:55vmax; border-radius:50%;
-    filter:blur(90px); opacity:.22;
-    animation: drift 22s ease-in-out infinite alternate, glow 9s ease-in-out infinite; }
-  #aurora .b1 { background:#1d6b75; top:-20%; left:-15%; }
-  #aurora .b2 { background:#2f4a8f; bottom:-25%; right:-15%;
-    animation: drift 28s ease-in-out infinite alternate-reverse, glow 11s ease-in-out infinite; animation-delay:-8s; }
-  #aurora .b3 { background:#1f5f6a; top:20%; left:35%; width:40vmax; height:40vmax;
-    animation: drift 24s ease-in-out infinite alternate, glow 13s ease-in-out infinite; animation-delay:-14s; }
-  @keyframes drift {
-    from { transform:translate(-4vw,-3vh) scale(1); }
-    to   { transform:translate(12vw,9vh) scale(1.2); }
-  }
-  @keyframes glow {
-    0%, 100% { opacity:.14; }
-    50%      { opacity:.34; }
-  }
-
   header, main, footer { position:relative; z-index:1; }
   nav { display:flex; justify-content:space-between; align-items:center; padding:24px 56px; }
   .logo { font-weight:900; font-size:22px; letter-spacing:-.02em; transform:scaleX(1.25); transform-origin:left; }
@@ -58,7 +40,6 @@
   #viewer .caption { align-self:flex-start; background:rgba(15,17,20,.6); padding:10px 16px; border-radius:12px; font-size:15px; }
   footer { padding:24px 56px 40px; color:var(--muted); font-size:14px; }
   @media (prefers-reduced-motion: reduce) {
-    #aurora .blob { animation:none; }
     .card { opacity:1; translate:none; transition:transform .2s, border-color .2s; }
     .thumb { transition:none; }
     .card:hover .thumb { transform:none; }
@@ -71,8 +52,6 @@
 /* Dot network: drifting dots and lines over the glow */
 #net { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
 
-/* Glowing ink trail canvas, sits behind the content */
-#ink { position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:0; }
 
 /* ---- Added: nav links, hero buttons, preview arrows, shimmer, doc pages ---- */
 a.logo { color:var(--fg); text-decoration:none; }
