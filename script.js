@@ -79,9 +79,17 @@ document.getElementById("filters").addEventListener("click", e => {
   if (!chip) return;
   document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c === chip));
   const f = chip.dataset.f;
+  let n = 0;
   document.querySelectorAll(".card").forEach(card => {
     const show = f === "all" || card.dataset.cats.split(" ").includes(f);
     card.classList.toggle("hidden", !show);
+    if (show) {
+      // Re-run a small staggered pop-in on the cards that are now visible
+      card.classList.remove("pop");
+      void card.offsetWidth;
+      card.style.animationDelay = (n++ * 30) + "ms";
+      card.classList.add("pop");
+    }
   });
 });
 
