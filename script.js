@@ -102,3 +102,23 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.12 });
 document.querySelectorAll(".card").forEach(c => io.observe(c));
+
+// Floating 3D dots scattered in a sphere behind the page
+(() => {
+  const cloud = document.querySelector("#dots3d .cloud");
+  if (!cloud) return;
+  for (let i = 0; i < 90; i++) {
+    const d = document.createElement("div");
+    d.className = "dot";
+    const th = Math.random() * Math.PI * 2;
+    const ph = Math.acos(2 * Math.random() - 1);
+    const R = 260 + Math.random() * 240;
+    const x = R * Math.sin(ph) * Math.cos(th);
+    const y = R * Math.sin(ph) * Math.sin(th);
+    const z = R * Math.cos(ph);
+    d.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px)`;
+    d.style.opacity = (0.25 + Math.random() * 0.65).toFixed(2);
+    cloud.appendChild(d);
+  }
+})();
+
