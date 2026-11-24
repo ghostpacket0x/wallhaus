@@ -101,3 +101,16 @@ footer a:hover { color:var(--fg); }
   .btn, .btn:hover { transition:none; transform:none; box-shadow:none; }
   .hero h1, #viewer.open, .card.pop { animation:none; }
 }
+
+/* 3D grid floor background */
+#floor3d { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; background:#000; }
+#floor3d .plane { position:absolute; left:-50%; right:-50%; bottom:-10%; height:110%;
+  background-image:linear-gradient(to right, rgba(255,255,255,.12) 1px, transparent 1px),
+                   linear-gradient(to bottom, rgba(255,255,255,.12) 1px, transparent 1px);
+  background-size:40px 40px;
+  transform:perspective(220px) rotateX(62deg); transform-origin:50% 100%;
+  animation:floor 6s linear infinite; }
+#floor3d .fade { position:absolute; inset:0; background:linear-gradient(to bottom, #000 0%, transparent 45%); }
+@keyframes floor { from { background-position:0 0; } to { background-position:0 40px; } }
+@media (prefers-reduced-motion: reduce) { #floor3d .plane { animation:none; } }
+
