@@ -101,12 +101,3 @@ footer a:hover { color:var(--fg); }
   .btn, .btn:hover { transition:none; transform:none; box-shadow:none; }
   .hero h1, #viewer.open, .card.pop { animation:none; }
 }
-
-/* Floating 3D dots background: transparent, behind the content, never blocks clicks */
-#dots3d { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; perspective:900px; }
-#dots3d .cloud { position:absolute; left:50%; top:50%; width:0; height:0; transform-style:preserve-3d;
-  animation:spin3d 60s linear infinite; }
-#dots3d .dot { position:absolute; width:2px; height:2px; margin:-1px 0 0 -1px; border-radius:50%; background:#fff; }
-@keyframes spin3d { from { transform:rotateY(0deg) rotateX(12deg); } to { transform:rotateY(360deg) rotateX(12deg); } }
-@media (prefers-reduced-motion: reduce) { #dots3d .cloud { animation:none; } }
-
