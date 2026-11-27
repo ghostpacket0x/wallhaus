@@ -183,3 +183,24 @@ document.querySelectorAll(".card").forEach(c => io.observe(c));
   frame();
 })();
 
+// Scroll motion: cards grow as they reach the middle of the screen and ease down near the edges
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let ticking = false;
+  function update() {
+    const vh = innerHeight;
+    document.querySelectorAll(".card:not(.hidden)").forEach(card => {
+      const r = card.getBoundingClientRect();
+      const offset = ((r.top + r.height / 2) - vh / 2) / vh;   // -0.5 top .. 0.5 bottom
+      const closeness = 1 - Math.min(1, Math.abs(offset) * 2);  // 1 = centered, 0 = at the edge
+      card.style.scale = (0.94 + 0.06 * closeness).toFixed(3);
+    });
+    ticking = false;
+  }
+  addEventListener("scroll", () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  addEventListener("resize", update);
+  update();
+})();
+
