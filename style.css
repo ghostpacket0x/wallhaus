@@ -101,3 +101,7 @@ footer a:hover { color:var(--fg); }
   .btn, .btn:hover { transition:none; transform:none; box-shadow:none; }
   .hero h1, #viewer.open, .card.pop { animation:none; }
 }
+
+/* Dot network background: transparent, behind the content, never blocks clicks */
+#bg { position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+

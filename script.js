@@ -102,3 +102,84 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.12 });
 document.querySelectorAll(".card").forEach(c => io.observe(c));
+
+// Dot network background: drifts to the right, leans toward the mouse
+(() => {
+  const canvas = document.getElementById("bg");
+  if (!canvas) return;
+  const BRAND = { line: "238,240,244", dot: "238,240,244" };  // white-grey, matches the site
+  const OPACITY = 0.6;
+  const DOTS = 180;          // fewer dots = lighter on phones
+  const SPEED = 0.0015;      // automatic turning speed
+  const DRIFT = 0.0012;      // steady drift to the right
+  const g = canvas.getContext("2d");
+  let W, H;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  addEventListener("resize", resize);
+
+  const dots = Array.from({ length: DOTS }, () => {
+    const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2;
+    const s = Math.sqrt(1 - u * u), r = Math.cbrt(Math.random());
+    return { x: r * s * Math.cos(th), y: r * u, z: r * s * Math.sin(th) };
+  });
+
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let angle = 0, leanX = 0, leanY = 0, mx = -1e4, my = -1e4;
+  addEventListener("pointermove", e => { mx = e.clientX; my = e.clientY; });
+  document.addEventListener("pointerleave", () => { mx = my = -1e4; });
+
+  function frame() {
+    g.clearRect(0, 0, W, H);
+    if (!still) {
+      angle += SPEED;
+      for (const d of dots) {
+        d.x += DRIFT;
+        if (d.x > 1.2) d.x -= 2.4;   // re-enter on the left
+      }
+    }
+
+    const tx = mx > -1e3 ? (mx / W - 0.5) * 0.6 : 0;
+    const ty = mx > -1e3 ? (my / H - 0.5) * 0.4 : 0;
+    leanX += (tx - leanX) * 0.05;
+    leanY += (ty - leanY) * 0.05;
+
+    const a = angle + leanX, t = 0.35 + leanY;
+    const R = Math.hypot(W, H) * 0.45;
+    const cA = Math.cos(a), sA = Math.sin(a), cT = Math.cos(t), sT = Math.sin(t);
+
+    const p = dots.map(d => {
+      const x1 = d.x * cA - d.z * sA, z1 = d.x * sA + d.z * cA;
+      const y1 = d.y * cT - z1 * sT, z2 = d.y * sT + z1 * cT;
+      const k = 1 / (1 + z2 * 0.35);
+      return { x: W / 2 + x1 * R * k, y: H / 2 + y1 * R * k, z: z2, k };
+    });
+
+    const lim = R * 0.2;
+    g.lineWidth = 1;
+    for (let i = 0; i < p.length; i++) for (let j = i + 1; j < p.length; j++) {
+      const A = p[i], B = p[j], d = Math.hypot(A.x - B.x, A.y - B.y);
+      if (d < lim) {
+        const depth = (A.z + B.z + 2) / 4;
+        let al = (1 - d / lim) * (0.25 + depth * 0.5) * OPACITY;
+        const dm = Math.hypot((A.x + B.x) / 2 - mx, (A.y + B.y) / 2 - my);
+        if (dm < 120) al = Math.min(1, al + (1 - dm / 120) * 0.6);
+        g.strokeStyle = `rgba(${BRAND.line},${al})`;
+        g.beginPath(); g.moveTo(A.x, A.y); g.lineTo(B.x, B.y); g.stroke();
+      }
+    }
+    for (const q of p) {
+      const depth = (q.z + 1) / 2;
+      g.fillStyle = `rgba(${BRAND.dot},${(0.35 + depth * 0.65) * OPACITY})`;
+      g.beginPath(); g.arc(q.x, q.y, 1.2 + q.k * 1.3, 0, Math.PI * 2); g.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
